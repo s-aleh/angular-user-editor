@@ -1,0 +1,46 @@
+.active-user {
+	background-color: #dddddd;
+}
+
+.user {
+	cursor: pointer;
+}
+.user:hover {
+	background-color: #eeeeee;
+}
+.well h2 {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+.scroll-bar-main {
+	position: relative;
+	width: 100%;
+	height: 20px;
+	background-color: #eeeeee;
+	visibility: hidden;
+	margin: 0 0 10px 0;
+}
+.scroll-bar-left, .scroll-bar-rigth {
+	position: absolute;
+	top: 0;
+	width: 20px;
+	height:20px;
+	text-align: center;
+	cursor: pointer;
+	font-size: 14px;
+	padding-top: 1px;
+}
+.scroll-bar-left {
+	left: 0;
+}
+.scroll-bar-rigth {
+	right: 0;
+}
+.scroll-bar {
+	position: absolute;
+	left: 20px;
+	top: 0;
+	width: 20px;
+	height: 20px;
+	background-color: #aaaaaa;
+}
