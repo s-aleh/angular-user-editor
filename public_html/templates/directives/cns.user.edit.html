@@ -1,0 +1,104 @@
+<form class="form-horizontal">
+	<div class="well">
+		<h2>Name</h2>
+		<div class="form-group">
+			<label class="col-sm-4 control-label">First Name</label>
+			<div class="col-sm-5">
+				<input ng-if="edit" ng-model="user.name.first" required type="text" class="form-control">
+				<p ng-if="!edit" class="form-control-static">{{user.name.first}}</p>
+			</div>
+			<div class="col-sm-3">
+				<button ng-click="items.showEditForm()" ng-if="!items.edit()" type="button" class="close user-edit" aria-label="Edit"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-4 control-label">Last Name</label>
+				<div class="col-sm-5">
+					<input ng-if="edit" ng-model="user.name.last" type="text" class="form-control">
+					<p ng-if="!edit" class="form-control-static">{{user.name.last}}</p>
+				</div>
+				<div class="col-sm-3"></div>
+		</div>
+	</div>
+	<div class="well">
+		<h2>Address</h2>
+		<div class="form-group">
+			<label class="col-sm-4 control-label">Street</label>
+			<div class="col-sm-5">
+				<input ng-if="edit" type="text" class="form-control" ng-model="user.address.street">
+				<p ng-if="!edit" class="form-control-static">{{user.address.street}}</p>
+			</div>
+			<div class="col-sm-3"></div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-4 control-label">City</label>
+				<div class="col-sm-5">
+					<input ng-if="edit" type="text" class="form-control" ng-model="user.address.city">
+					<p ng-if="!edit" class="form-control-static">{{user.address.city}}</p>
+				</div>
+				<div class="col-sm-3"></div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-4 control-label">Country</label>
+			<div class="col-sm-5">
+				<select ng-if="edit" ng-model="user.address.country.code" ng-change="updateState()" class="form-control">
+					<option></option>
+					<option ng-selected="{{code === user.address.country.code}}"
+							ng-repeat="(code, name) in countries" value="{{code}}">{{name}}</option>
+				</select>
+				<p ng-if="!edit" class="form-control-static">{{countries[user.address.country.code]}}</p>
+			</div>
+			<div class="col-sm-3"></div>
+		</div>
+		<div ng-if="user.address.country.code === 'US'" class="form-group">
+			<label class="col-sm-4 control-label">State</label>
+			<div class="col-sm-5">
+				<select ng-if="edit" ng-model="user.address.country.stateCode" class="form-control">
+					<option value=""></option>
+					<option ng-selected="{{code === user.address.country.stateCode}}"
+							ng-repeat="(code, name) in states" value="{{code}}">{{name}}</option>
+				</select>
+				<p ng-if="!edit" class="form-control-static">{{states[user.address.country.stateCode]}}</p>
+			</div>
+			<div class="col-sm-3"></div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-4 control-label">Zip</label>
+			<div class="col-sm-5">
+				<input ng-if="edit" type="text" class="form-control" ng-model="user.address.zip">
+				<p ng-if="!edit" class="form-control-static">{{user.address.zip}}</p>
+			</div>
+			<div class="col-sm-3"></div>
+		</div>
+	</div>
+	<div class="well">
+		<h2>Phone</h2>
+		<div class="form-group">
+			<label class="col-sm-4 control-label">Home</label>
+			<div class="col-sm-5">
+				<input ng-if="edit" type="text" class="form-control" ng-model="user.phone.home">
+				<p ng-if="!edit" class="form-control-static">{{user.phone.home}}</p>
+			</div>
+				<div class="col-sm-3"></div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-4 control-label">Mobile</label>
+			<div class="col-sm-5">
+				<input ng-if="edit" type="text" class="form-control" ng-model="user.phone.mobile">
+				<p ng-if="!edit" class="form-control-static">{{user.phone.mobile}}</p>
+			</div>
+			<div class="col-sm-3"></div>
+		</div>
+	</div>
+	<div class="well" ng-if="edit">
+		<div class="row">
+			<div class="col-sm-4"></div>
+			<div class="col-sm-5">
+				<button ng-click="items.save()" type="button" class="btn btn-success">Save</button>
+				<button ng-click="items.reset()" type="button" class="btn btn-warning">Reset</button>
+				<button ng-click="items.cancel()" type="button" class="btn btn-warning">Cancel</button>
+			</div>
+			<div class="col-sm-3"></div>
+		</div>
+	</div>
+</form>

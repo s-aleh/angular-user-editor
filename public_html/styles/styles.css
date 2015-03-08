@@ -1,12 +1,17 @@
-.active-user {
+.user-active {
 	background-color: #dddddd;
 }
-
 .user {
 	cursor: pointer;
 }
+.user-disabled {
+	cursor: default;
+}
 .user:hover {
 	background-color: #eeeeee;
+}
+.user-new {
+	visibility: hidden;
 }
 .well h2 {
 	margin-top: 0;
@@ -43,4 +48,16 @@
 	width: 20px;
 	height: 20px;
 	background-color: #aaaaaa;
+}
+.user-add:hover, .user-edit:hover {
+	color: green;
+}
+.user-remove:hover {
+	color: red;
+}
+.glyphicon-trash {
+	margin-left: 10px;
+}
+.glyphicon-remove {
+	margin-left: 15px;
 }

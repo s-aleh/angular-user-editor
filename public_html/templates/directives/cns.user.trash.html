@@ -1,0 +1,19 @@
+<div ng-if="items.trash()">
+	<h2>Trash</h2>
+	<div ng-repeat="trash in items.getTrashItems() | pagination: filter" class="well">
+		<button ng-click="items.removeTrash(trash)" type="button" class="close" aria-label="Delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+		<button ng-click="items.repairTrash(trash)" type="button" class="close" aria-label="Repair"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span></button>
+		<p>{{trash.name.first}} {{trash.name.last}}</p>
+		<p>
+		{{trash.address.street}}<br>
+		{{trash.address.city}}<br>
+		{{countries[trash.address.country.code]}}<br>
+		{{states[trash.address.country.stateCode]}}<br>
+		{{trash.address.zip}}
+		</p>
+		<p>
+		Home: {{trash.phone.home}}<br>
+		Mobile: {{trash.phone.mobile}}
+		</p>
+	</div>
+</div>

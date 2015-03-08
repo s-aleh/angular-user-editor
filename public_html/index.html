@@ -4,24 +4,21 @@
 		<title>Users editor</title>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="stylesheet" type="text/css" href="/styles/bootstrap.min.css">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="/styles/styles.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
 		<script type="text/javascript" src="scripts/app.js"></script>
 		<script type="text/javascript" src="scripts/controllers/controller.js"></script>
 		<script type="text/javascript" src="scripts/factories/factory.js"></script>
+		<script type="text/javascript" src="scripts/factories/cns.factory.js"></script>
 		<script type="text/javascript" src="scripts/filters/filters.js"></script>
+		<script type="text/javascript" src="scripts/directives/cns.directives.js"></script>
 	</head>
 	<body ng-app="App">
 		<div class="container" ng-controller="UsersController">
 			<div class="row">
 				<div class="col-lg-8">
 					<h1>Data</h1>
-					<button ng-if="(!uf.getStatus('new') || uf.getStatus('form')) && !uf.getStatus('edit')" ng-click="new()" type="button" class="btn btn-info">New</button>
-					<button ng-if="uf.getStatus('form') && !uf.getStatus('edit')" ng-click="edit()" type="button" class="btn btn-info">Edit</button>
-					<button ng-if="uf.getStatus('form') && !uf.getStatus('edit')" ng-click="remove()" type="button" class="btn btn-danger">Delete</button>
-					<button ng-if="uf.getCountTrashItems() > 0" ng-click="trash()" type="button" class="btn btn-default">Trash <span class="badge">{{uf.getCountTrashItems()}}</span></button>
 				</div>
 				<div class="col-lg-4">
 					<h1>Users</h1>
@@ -31,7 +28,10 @@
 							<input type="text" class="form-control" placeholder="Search" ng-model="search">
 						</div>
 						<div class="form-group">
-							<input type="number" class="form-control" min="1" max="50" ng-model="scroll.itemsPerPage" ng-change="scroll.reinit()" style="width: 70px">
+							<input type="number" class="form-control" min="1" max="50" ng-model="itemsPagination.get().itemsPerPage" ng-change="itemsPagination.reinit()" style="width: 70px">
+						</div>
+						<div class="form-group" ng-if="items.trashCountItems() > 0" ng-click="items.showTrash()">
+						<button ng-click="" type="button" class="close" aria-label="Trash"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> <span class="badge">{{items.trashCountItems()}}</span></button>
 						</div>
 					</form>
 					<br>
@@ -41,127 +41,33 @@
 			</div>
 			<div class="row">
 				<div class="col-lg-8">
-					<form ng-if="uf.getStatus('new') || uf.getStatus('form')" class="form-horizontal">
-					<div class="well">
-						<h2>Name</h2> {{user.id}}
-							<div class="form-group">
-								<label class="col-sm-4 control-label">First Name</label>
-								<div class="col-sm-5">
-									<input ng-if="uf.getStatus('edit')" ng-model="user.name.first" required type="text" class="form-control">
-									<p ng-if="!uf.getStatus('edit')" class="form-control-static">{{user.name.first}}</p>
-								</div>
-								<div class="col-sm-3"></div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-4 control-label">Last Name</label>
-								<div class="col-sm-5">
-									<input ng-if="uf.getStatus('edit')" ng-model="user.name.last" type="text" class="form-control">
-									<p ng-if="!uf.getStatus('edit')" class="form-control-static">{{user.name.last}}</p>
-								</div>
-								<div class="col-sm-3">
-								</div>
-							</div>
-					</div>
-					
-					<div class="well">
-						<h2>Address</h2>
-							<div class="form-group">
-								<label class="col-sm-4 control-label">Street</label>
-								<div class="col-sm-5">
-									<input ng-if="uf.getStatus('edit')" type="text" class="form-control" ng-model="user.address.street">
-									<p ng-if="!uf.getStatus('edit')" class="form-control-static">{{user.address.street}}</p>
-								</div>
-								<div class="col-sm-3"></div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-4 control-label">City</label>
-								<div class="col-sm-5">
-									<input ng-if="uf.getStatus('edit')" type="text" class="form-control" ng-model="user.address.city">
-									<p ng-if="!uf.getStatus('edit')" class="form-control-static">{{user.address.city}}</p>
-								</div>
-								<div class="col-sm-3"></div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-4 control-label">Country</label>
-								<div class="col-sm-5">
-									<select ng-if="uf.getStatus('edit')" ng-model="user.address.country.code" ng-change="updateState()" class="form-control">
-										<option></option>
-										<option ng-selected="{{code === user.address.country.code}}"
-												ng-repeat="(code, name) in countries" value="{{code}}">{{name}}</option>
-									</select>
-									<p ng-if="!uf.getStatus('edit')" class="form-control-static">{{countries[user.address.country.code]}}</p>
-								</div>
-								<div class="col-sm-3"></div>
-							</div>
-							<div ng-if="user.address.country.code === 'US'" class="form-group">
-								<label class="col-sm-4 control-label">State</label>
-								<div class="col-sm-5">
-									<select ng-if="uf.getStatus('edit')" ng-model="user.address.country.stateCode" class="form-control">
-										<option value=""></option>
-										<option ng-selected="{{code === user.address.country.stateCode}}"
-												ng-repeat="(code, name) in states" value="{{code}}">{{name}}</option>
-									</select>
-									<p ng-if="!uf.getStatus('edit')" class="form-control-static">{{states[user.address.country.stateCode]}}</p>
-								</div>
-								<div class="col-sm-3"></div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-4 control-label">Zip</label>
-								<div class="col-sm-5">
-									<input ng-if="uf.getStatus('edit')" type="text" class="form-control" ng-model="user.address.zip">
-									<p ng-if="!uf.getStatus('edit')" class="form-control-static">{{user.address.zip}}</p>
-								</div>
-								<div class="col-sm-3">
-								</div>
-							</div>
-					</div>
-
-					<div class="well">
-						<h2>Phone</h2>
-							<div class="form-group">
-								<label class="col-sm-4 control-label">Home</label>
-								<div class="col-sm-5">
-									<input ng-if="uf.getStatus('edit')" type="text" class="form-control" ng-model="user.phone.home">
-									<p ng-if="!uf.getStatus('edit')" class="form-control-static">{{user.phone.home}}</p>
-								</div>
-								<div class="col-sm-3"></div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-4 control-label">Mobile</label>
-								<div class="col-sm-5">
-									<input ng-if="uf.getStatus('edit')" type="text" class="form-control" ng-model="user.phone.mobile">
-									<p ng-if="!uf.getStatus('edit')" class="form-control-static">{{user.phone.mobile}}</p>
-								</div>
-								<div class="col-sm-3">
-								</div>
-							</div>
-					</div>
-				
-					<div class="well" ng-if="uf.getStatus('edit')">
-						<div class="row">
-							<div class="col-sm-4"></div>
-							<div class="col-sm-5">
-								<button ng-if="uf.getStatus('edit')" ng-click="save()" type="button" class="btn btn-success">Save</button>
-								<button ng-if="uf.getStatus('edit')" ng-click="reset()" type="button" class="btn btn-warning">Reset</button>
-								<button ng-if="uf.getStatus('edit')" ng-click="cancel()" type="button" class="btn btn-warning">Cancel</button>
-							</div>
-							<div class="col-sm-3"></div>
-						</div>
-					</div>
-
-					</form>
+					<cns-pagination
+						pagination="trashItemsPagination"
+						pages="trashItemsPagination.get().pages"
+						curpage="trashItemsPagination.get().curPage"
+						counttrashitems="items.trashCountItems()"
+						ng-if="items.trash()"></cns-pagination>
+					<cns-user-trash
+						items="items" filter="trashItemsPagination.get()" countries="countries" states="states"></cns-user-trash>
+					<cns-user-edit
+						user="items.getCurItem()" items="items" edit="items.edit()" ng-if="items.show()"
+						countries="countries" states="states"></cns-user-edit>
 				</div>
 				<div class="col-lg-4">
-					<div class="scroll-bar-main" ng-style="scroll.visibility">
-						<div ng-click="scroll.prev()" class="scroll-bar-left"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></div>
-						<div class="scroll-bar" ng-style="scroll.style"></div>
-						<div ng-click="scroll.next()" class="scroll-bar-rigth"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></div>
-					</div>
+					<cns-pagination-scroll-bar
+						pagination="itemsPagination"
+						pages="itemsPagination.get().pages"
+						itemsperpage="itemsPagination.get().itemsPerPage"
+						curpage="itemsPagination.get().curPage"></cns-pagination-scroll-bar>
 					<ul class="list-group">
-					  <li class="list-group-item user" ng-repeat="user in users | filter: search | pagination: scroll"
-						  ng-click="setUser(user)" ng-class="{'active-user': user.id == userId}">
-						{{$index}} {{user.id}} {{user.name.last}} {{user.name.first}}
-					  </li>
+						<li class="list-group-item">&hellip;
+						<button ng-click="items.add()" type="button" ng-class="{'user-new': items.new(), 'user-new': items.edit()}" class="close user-add" aria-label="Add"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+						</li>
+						<li class="list-group-item" ng-repeat="user in items.getItems() | filter: search | pagination: itemsPagination.get()"
+							ng-click="items.setCurItem(user)" ng-class="{'user-disabled': items.edit(), 'user': !items.edit(), 'user-active': items.getCurItem().id == user.id}">
+						{{user.name.last}} {{user.name.first}}
+						<button ng-click="items.remove(user)" ng-if="!items.new() && !items.edit()" type="button" class="close user-remove" aria-label="Remove"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+						</li>
 					</ul>
 				</div>
 			</div>

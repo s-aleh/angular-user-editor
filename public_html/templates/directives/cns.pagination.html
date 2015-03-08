@@ -1,0 +1,7 @@
+<div class="text-center" ng-if="counttrashitems">
+<ul class="pagination">
+	<li ng-class="{'disabled': curpage == 1}" ng-click="pagination.prev()"><a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+	<li ng-click="pagination.setPage($index + 1)" ng-class="{'active': $index + 1 == curpage}" ng-repeat="page in pagination.getPages() track by $index"><a href="#">{{$index + 1}}</a></li>	
+	<li ng-class="{'disabled': curpage == pages || pages == 0}" ng-click="pagination.next()"><a href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+</ul>
+</div>
